@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>home</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <style type="text/css">
+        a {
+            /*margin-left: 20px;*/
+            text-decoration: none;
+        }
+
+        .bg{
+            position:relative;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .head {
+            margin-top: -20px;
+        }
+
+        .center {
+            clear: both;
+        }
+
+        .footer {
+            width: 250px;
+            height: 50px;
+            position: absolute;
+            bottom: 0px;
+            /*top: 50%;*/
+            left: 50%;
+            margin-left: -126px; /*要居中的div的宽度的一半*/
+            /*margin-top: -120px;*/
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg">
+    <div class="head">
+        <div style="float: left;margin-left: 3%;">
+            <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">发布</button>
+        </div>
+        <div style="margin-left: 70%;"><label id="username" style="color: red;"><%- user.name %></label><br><a href="/logout">退出 </a></div>
+    </div>
+    <div class="center">
+        <% for(var i = 0; i < result.length;i++){ %>
+        <div style="width: 60%;margin: 0 auto;">
+            <h2>第<%= i + 1 %>篇博客</h2>
+            <div class="form-group">
+                <input readonly style="background:none;color: #00B7FF;" type="text" class="form-control" value="标题：<%= result[i].blog_title %>">
+            </div>
+            <div class="form-group">
+                <textarea readonly style="background:none;color: #00B7FF;" class="form-control" rows="3">内容：<%= result[i].blog_content %></textarea>
+            </div>
+            <!--<td>标题：<%= result[i].blog_title %></td>-->
+            <!--<td>内容：<%= result[i].blog_content %></td>-->
+            </tr>
+        </div>
+        <% } %>
+    </div>
+    <div class="footer">
+        <p>版权所有:&nbsp;&nbsp; tandong_sun</p>
+        <p>联系方式:<a href="mailto:tandong_sun@163.com">tandong_sun@163.com</a></p>
+    </div>
+
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">发布博客</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="blog_title" placeholder="文章标题">
+                </div>
+                <div class="form-group">
+                    <textarea class="form-control" rows="3" id="blog_content" placeholder="文章内容"></textarea>
+                </div>
+                <div id='tip' style="position: absolute; "></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id='myPublish'>发布</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#myPublish').click(function () {
+            var blog_title = $("#blog_title").val();
+            var blog_content = $("#blog_content").val();
+            if (blog_title == "" || blog_content == "") {
+//                alert("请填写完整");
+                $("#blog_title").css("border", "1px solid red");
+                $("#blog_content").css("border", "1px solid red");
+                $('#tip').html("请填写完整").css('color', 'red')
+            } else {
+                var myUsername = $("#username").text();
+                var data = {"username": myUsername, "blog_title": blog_title, "blog_content": blog_content}
+                $.ajax({
+                    url: '/myPublish',
+                    type: 'post',
+                    data: data,
+                    success: function (data, status) {
+                        if (status == 'success') {
+                            location.href = 'home';
+                        }
+                    },
+                    error: function (data, err) {
+                        location.href = 'home';
+                    }
+                });
+            }
+
+
+        })
+    })
+</script>
+
+</body>
+</html>
