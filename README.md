@@ -1,3 +1,2 @@
-# node-login
-登录demo
-node+express+mongoose写的登录
+# myBlog
+easy node_mongodb_myBlog
